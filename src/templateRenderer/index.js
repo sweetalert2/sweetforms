@@ -158,6 +158,26 @@ const radioInput = ({field, itemsByLine, step}) => {
     return input
 }
 
+const textAreaInput = ({field, itemsByLine, step}) => {
+    var resizeAttribute = 'None';
+
+    if (field.resizeVertically && field.resizeHorizontally) {
+        resizeAttribute = 'Both';
+    } else if (field.resizeVertically) {
+        resizeAttribute = 'Vertical';
+    } else if (field.resizeHorizontally) {
+        resizeAttribute = 'Horizontal';
+    }
+
+    const input = 
+    `<div id="field_${field.key}" style="${field.fullWidth ? `grid-column: auto / span ${step && step.itemsByLine ? step.itemsByLine : itemsByLine ? itemsByLine : 2};` : ''}width: auto;text-align:left;" class="fieldBloc">
+        <label style="margin-left:0;">${field.label} ${field.validation && field.validation.includes('required') ? '*' : ''}</label>
+        <textarea autocomplete="off" aria-autocomplete="off" cols="${field.cols ? field.cols : 'auto'}" rows="${field.rows ? field.rows : 5}" placeholder="${field.placeholder ? field.placeholder : ''}" id="--swInput${field.key}--" class="swTextArea swTextAreaResize${resizeAttribute} mt-2">${field.value}</textarea>
+    </div>`
+
+    return input
+}
+
 // Form renderer
 
 
@@ -195,6 +215,7 @@ export const formTemplateRenderer = ({step, fields, itemsByLine, themeOptions, s
             else if (field.type === 'radio') return radioInput({field, itemsByLine, step})
             else if (field.type === 'password') return passwordInput({field, itemsByLine, step})
             else if (field.type === 'data-table') return dataTable({field, itemsByLine, step, cellRenderers})
+            else if (field.type === 'textarea') return textAreaInput({field, itemsByLine, step})
             else return baseInput({field, itemsByLine, step})
         }).join('')}
     </div>`
